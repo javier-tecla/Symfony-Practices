@@ -36,6 +36,7 @@ class Post
      * @var Collection<int, Comment>
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', orphanRemoval: true)]
+    #[ORM\OrderBy(['id' => 'DESC'])]
     private Collection $comments;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
