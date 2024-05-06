@@ -37,10 +37,26 @@ class PostRepository extends ServiceEntityRepository
     public function findLatest(): array
     {
         return $this->createQueryBuilder('post')
+            ->addSelect('comments', 'category')
+            ->leftJoin('post.comments', 'comments')
+            ->leftJoin('post.category', 'category')
+
             ->orderBy('post.id', 'DESC')
-            ->setMaxResults(22)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findOneBySlug($slug): ?Post
+    {
+        return $this->createQueryBuilder('post')
+            ->andWhere('post.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->addSelect(['comments', 'category', 'user'])
+            ->leftJoin('post.comments', 'comments')
+            ->leftJoin('comments.user', 'user')
+            ->leftJoin('post.category', 'category')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**

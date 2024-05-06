@@ -26,13 +26,13 @@ class PageController extends AbstractController
     }
 
     #[Route('/blog/{slug}', name: 'app_post')]
-    public function post(Post $post): Response
+    public function post($slug, PostRepository $postRepository): Response
     {
-        $form = $this->createForm(CommentType::class);
+        // $form = $this->createForm(CommentType::class);
 
         return $this->render('page/post.html.twig', [
-            'post' => $post,
-            'form' => $form->createView()
+            'post' => $postRepository->findOneBySlug($slug),
+            'form' => $this->createForm(CommentType::class),
         ]);
     }
 
